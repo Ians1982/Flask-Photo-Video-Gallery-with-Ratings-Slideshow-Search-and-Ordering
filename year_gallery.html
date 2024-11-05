@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ year }} Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{ year }} Galleries</h1>
+    <div class="gallery-list">
+        <ul>
+            {% for gallery in galleries %}
+                <li><a href="/{{ year }}/{{ gallery }}">{{ gallery }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <a href="/">Back to Year Selection</a>
+</body>
+</html>

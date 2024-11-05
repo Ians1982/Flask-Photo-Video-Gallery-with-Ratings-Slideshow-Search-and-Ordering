@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Galleries of Ian & Jane Steel</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            text-align: center;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 40px;
+            color: #2c3e50;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 26px;
+            color: #34495e;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .year-navigation {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .year-navigation a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #3498db;
+            font-size: 18px;
+        }
+
+        .year-navigation a:hover {
+            text-decoration: underline;
+        }
+
+        .gallery-table {
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .gallery-table td {
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+            transition: transform 0.2s;
+        }
+
+        .gallery-item {
+            display: inline-block;
+            margin: 5px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-thumbnail {
+            width: 200px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        .controls a, .controls button {
+            margin-right: 40px;
+            text-decoration: none;
+            font-size: 18px;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .controls a:hover, .controls button:hover {
+            background-color: #2980b9;
+        }
+
+        form {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        input[type="text"], select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+            width: 200px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #e67e22;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #d35400;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        <a href="{{ url_for('galleries') }}" style="text-decoration: none; color: #4CAF50; font-weight: bold;">Browse Galleries</a>&emsp;&emsp;
+        Photo Galleries of Ian & Jane Steel&emsp;&emsp;
+        <a href="{{ url_for('videos') }}" style="text-decoration: none; color: #4CAF50; font-weight: bold;">Watch Videos</a>
+    </h1>
+
+    <!-- Year Navigation -->
+    <div class="year-navigation">
+        {% for year in years %}
+            <a href="#{{ year }}">{{ year }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="controls">
+        <a href="{{ url_for('sort_images', order='asc') }}">Sort by Year Ascending</a>
+        <a href="{{ url_for('sort_images', order='desc') }}">Sort by Year Descending</a>
+        <button onclick="window.location.href='{{ url_for('random_gallery') }}'">Random Gallery</button>
+    </div>
+
+    <!-- Updated Search Form -->
+    <form action="/search" method="GET">
+        <input type="text" name="q" placeholder="Search by description or keyword">
+        <select name="year" required> <!-- Make year selection mandatory -->
+            {% for year in years %}
+                <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+        <select name="rating">
+            <option value="">All Ratings</option>
+            <option value="Best">Best</option>
+            <option value="Average">Average</option>
+            <option value="Unrated">Unrated</option>
+            <option value="Worst">Worst</option>
+            <option value="To Delete">To Delete</option>
+        </select>
+        <button type="submit">Search</button>
+        <br> You can search by one year at a time, for any rating, or a specific rating, with or without a search term
+    </form>
+
+    <!-- Loop over the years and their corresponding galleries -->
+    {% for year, galleries in galleries_by_year.items() %}
+        <h2 id="{{ year }}">Year: {{ year }}</h2> <!-- Set ID for scrolling -->
+        <table class="gallery-table">
+            <tr>
+                {% for gallery_name, image_count in galleries.items() %}
+                    <td class="gallery-item">
+                        <a href="{{ url_for('gallery', year=year, gallery_name=gallery_name) }}">
+                        {{ gallery_name }} <!-- Link the gallery name -->
+                        </a>
+                        <br><a href="{{ url_for('gallery', year=year, gallery_name=gallery_name) }}">
+                            <img src="/static/images/{{ year }}/{{ gallery_name }}/thumbnail.jpg" alt="{{ gallery_name }}" class="gallery-thumbnail">
+                            <br> ({{ image_count }} photos) <!-- Show image count -->
+                        </a>
+                    </td>
+
+                    {% if loop.index % 5 == 0 and not loop.last %}
+                        </tr><tr>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </table>
+    {% endfor %}
+</body>
+</html>

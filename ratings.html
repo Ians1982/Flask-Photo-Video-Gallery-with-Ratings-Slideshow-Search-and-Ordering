@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<style>
+table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse; /* Optional: for better cell borders */
+}
+
+th, td {
+    text-align: center; /* Center text in table cells */
+    padding: 5px; /* Add some padding for better spacing */
+    border: 1px solid #ddd; /* Optional: adds border around cells */
+}
+
+th {
+    background-color: #f2f2f2; /* Optional: gives a background to header */
+}
+</style>
+<body>
+    <main>
+	 <h1><a href="{{ url_for('galleries') }}" style="text-decoration: none; color: #4CAF50; font-weight: bold;">Browse Galleries</a>&emsp;&emsp;Rated Photo Galleries - by Years&emsp;&emsp;<a href="{{ url_for('videos') }}" style="text-decoration: none; color: #4CAF50; font-weight: bold;">Watch Videos</a></h1>
+       
+        <table style="width: 80%; margin: auto;">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Best Photos</th>
+                    <th>Average Photos</th>
+                    <th>Worst Photos</th>
+                    <th>To Delete Photos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2024', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2024', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2024', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2024', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2023</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2023', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2023', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2023', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2023', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2022</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2022', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2022', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2022', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2022', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2021</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2021', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2021', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2021', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2021', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2020</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2020', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2020', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2020', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2020', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2019</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2019', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2019', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2019', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2019', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2018</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2018', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2018', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2018', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2018', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2017</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2017', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2017', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2017', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2017', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2016</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2016', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2016', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2016', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2016', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2015</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2015', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2015', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2015', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2015', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2014</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2014', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2014', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2014', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2014', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2013</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2013', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2013', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2013', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2013', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2012</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2012', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2012', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2012', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2012', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2011</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2011', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2011', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2011', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2011', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2010</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2010', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2010', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2010', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2010', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2009</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2009', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2009', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2009', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2009', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2008</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2008', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2008', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2008', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2008', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2007</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2007', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2007', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2007', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2007', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2006</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2006', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2006', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2006', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2006', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2005</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2005', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2005', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2005', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2005', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2004</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2004', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2004', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2004', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2004', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2003</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2003', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2003', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2003', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2003', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+                <tr>
+                    <td>2002</td>
+                    <td><a href="{{ url_for('rating_gallery', year='2002', rating_type='Best') }}">Best Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2002', rating_type='Average') }}">Average Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2002', rating_type='Worst') }}">Worst Photos</a></td>
+                    <td><a href="{{ url_for('rating_gallery', year='2002', rating_type='To Delete') }}">To Delete Photos</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+	
+</body>
+</html>

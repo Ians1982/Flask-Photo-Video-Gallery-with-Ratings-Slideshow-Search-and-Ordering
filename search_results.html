@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - {{ query }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=YourDecorativeFont:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1 {
+            font-family: 'YourDecorativeFont', serif;
+            text-align: center;
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+        .image-list {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .table-container {
+            width: 40%;
+            margin: 0px;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 0px solid grey;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: center;
+            border: 0px solid black;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            background-color: #ffffff;
+        }
+        h3 {
+            margin-top: 0px;
+            padding: 0px;
+        }
+        h2 {
+            margin-bottom: 0;
+        }
+.thumbnail {
+    width: 19.2%; /* Maintain five thumbnails across */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+        }
+        .thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .thumbnail img {
+            max-width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        .thumbnail img:hover {
+            transform: scale(1.30);
+        }
+        .description {
+            word-wrap: break-word;
+            word-break: break-all;
+            margin: 5px 0;
+            text-align: left;
+        }
+        .controls {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        button {
+            color: white;
+            padding: 3px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 3px;
+            background-color: #4CAF50;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .delete-button {
+            background-color: #f44336;
+        }
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scrolling */
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* Align to the top of the modal */
+    padding-top: 20px; /* Add some space at the top */
+}
+.modal-content {
+    text-align: center;
+    max-width: 90%;
+    margin: auto;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #bbb;
+        }
+        .rating {
+            margin-top: 20px;
+        }
+        .return-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+        }
+        .return-to-top:hover {
+            background-color: #45a049;
+        }
+        #returnToIndex {
+            position: fixed;
+            bottom: 20px;
+            left: 150px;  /* Adjusted to be to the right of "Return to Top" */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #returnToIndex:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <main>
+	<h2><center>Search Results</center></h2>
+        <p><center>
+            There are {{ total_images }} photos which match the search 
+            "{{ query if query else 'Everything' }}" 
+            from "{{ year if year else 'All years' }}" 
+            with the rating "{{ rating if rating else 'All ratings' }}":
+        
+                        <h4>
+                            {% if count_best %}
+                                {{ count_best }} {{ 'is' if count_best == 1 else 'are' }} rated as Best,
+                            {% endif %}
+                            
+                            {% if count_average %}
+                                {{ count_average }} {{ 'is' if count_average == 1 else 'are' }} rated as Average,
+                            {% endif %}
+                            
+                            {% if count_unrated %}
+                                {{ count_unrated }} {{ 'is' if count_unrated == 1 else 'are' }} Unrated,
+                            {% endif %}
+                            
+                            {% if count_worst %}
+                                {{ count_worst }} {{ 'is' if count_worst == 1 else 'are' }} rated as Worst,
+                            {% endif %}
+                            
+                            {% if count_to_delete %}
+                                {{ count_to_delete }} {{ 'is' if count_to_delete == 1 else 'are' }} marked To Delete.
+                            {% endif %}
+                            
+                            {% if count_no_description %}
+                                {{ count_no_description }} {{ 'image has' if count_no_description == 1 else 'images have' }} no description.
+                            {% endif %}
+                        </h4></p><center><a href="{{ url_for('index') }}" class="floating-return-btn">Return to Galleries</a></center>
+        
+        </div>
+        <div class="image-list">
+            {% for image in results %}
+                <div class="thumbnail">
+                    {% set image_filename = image.path.split('/')[-1] %}
+                    {% set thumbnail_path = url_for('static', filename='images/' ~ image.path | replace('images/', 'thumbnails/')) %}
+                    {% set full_image_path = url_for('static', filename='images/' ~ image.path) %}
+
+                    <img src="{{ thumbnail_path }}" 
+                         aria-describedby="description-{{ loop.index }}" 
+                         onclick="showImage('{{ full_image_path }}', {{ loop.index }})"
+                         alt="Image {{ loop.index }} - {{ image.description if image.description else 'No description available.' }}">
+
+                    <p>Rating: {{ image.rating }}</p>
+                    <p>Description: {{ image.description if image.description else 'No description available.' }}</p>
+
+                    <form method="POST" action="/rate" class="rating-form">
+                        <input type="hidden" name="year" value="{{ year }}">
+                        <input type="hidden" name="gallery_name" value="{{ gallery_name }}">
+                        <input type="hidden" name="image_name" value="{{ image_filename }}">
+                        <select name="rating" required>
+                            <option value="">Rate...</option>
+                            <option value="Best" {% if image.rating == 'Best' %}selected{% endif %}>Best</option>
+                            <option value="Average" {% if image.rating == 'Average' %}selected{% endif %}>Average</option>
+                            <option value="Worst" {% if image.rating == 'Worst' %}selected{% endif %}>Worst</option>
+                        </select>
+                        <button type="submit">Rate</button>
+                    </form>
+
+                    <button class="delete-button" onclick="confirmDelete('{{ full_image_path }}')">Delete</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="myModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-content">
+                <img id="modalImage" src="" alt="Modal Image" style="max-width: 100%; max-height: 80vh;">
+                <div id="modalDescription" class="description"></div>
+                <div class="modal-controls">
+                    <button onclick="navigateModal(-1)">&#10094; Prev</button>
+                    <button onclick="navigateModal(1)">Next &#10095;</button>
+                </div>
+            </div>
+        </div>
+        <button class="return-to-top" id="returnToTop" onclick="scrollToTop()">Return to Top</button>
+		<button id="returnToIndex" onclick="window.location.href='/'">Return to Galleries</button>
+    </main>
+<p><center>
+            This is the end of the {{ total_images }} photos which matched the search 
+            "{{ query if query else 'Everything' }}" 
+            from "{{ year if year else 'All years' }}" 
+            with the rating "{{ rating if rating else 'All ratings' }}":
+        
+                        <h4>
+                            {% if count_best %}
+                                {{ count_best }} {{ 'is' if count_best == 1 else 'are' }} rated as Best,
+                            {% endif %}
+                            
+                            {% if count_average %}
+                                {{ count_average }} {{ 'is' if count_average == 1 else 'are' }} rated as Average,
+                            {% endif %}
+                            
+                            {% if count_unrated %}
+                                {{ count_unrated }} {{ 'is' if count_unrated == 1 else 'are' }} Unrated,
+                            {% endif %}
+                            
+                            {% if count_worst %}
+                                {{ count_worst }} {{ 'is' if count_worst == 1 else 'are' }} rated as Worst,
+                            {% endif %}
+                            
+                            {% if count_to_delete %}
+                                {{ count_to_delete }} {{ 'is' if count_to_delete == 1 else 'are' }} marked To Delete.
+                            {% endif %}
+                            
+                            {% if count_no_description %}
+                                {{ count_no_description }} {{ 'image has' if count_no_description == 1 else 'images have' }} no description.
+                            {% endif %}
+                        </h4></p>
+    <script>
+        let currentIndex = 0;
+        let images = [];
+        let descriptions = [];
+
+        function showImage(imagePath, index) {
+            currentIndex = index - 1; // Adjust to zero-based index
+            images = [];
+            descriptions = [];
+
+            document.querySelectorAll('.thumbnail img').forEach((img, idx) => {
+                images.push(img.src.replace('/thumbnails/', '/'));
+                descriptions.push(img.alt);
+            });
+
+            document.getElementById('modalImage').src = imagePath;
+            document.getElementById('modalDescription').innerText = descriptions[currentIndex];
+            document.getElementById('myModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            // Add keydown event listener for navigation
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+
+        function navigateModal(direction) {
+            currentIndex = (currentIndex + direction + images.length) % images.length; // Wrap around
+            document.getElementById('modalImage').src = images[currentIndex];
+            document.getElementById('modalDescription').innerText = descriptions[currentIndex];
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            } else if (event.key === 'ArrowRight') {
+                navigateModal(1);
+            } else if (event.key === 'ArrowLeft') {
+                navigateModal(-1);
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        window.onscroll = function() {
+            document.getElementById('returnToTop').style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20 ? 'block' : 'none';
+        };
+
+        function confirmDelete(imagePath) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                // Perform the deletion action here
+                // You may want to use a form submission or an AJAX call
+            }
+        }
+    </script>
+</body>
+</html>

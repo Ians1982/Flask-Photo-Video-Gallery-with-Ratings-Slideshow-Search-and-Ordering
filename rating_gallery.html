@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Ratings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Photo Ratings</h1>
+    </header>
+    <main>
+        <h2>Galleries by Year</h2>
+        <ul>
+            {% for year in years %}
+                <li>
+                    <h3>{{ year }}</h3>
+                    <ul>
+                        <li><a href="{{ url_for('rating_gallery', year=year, rating_type='Best') }}">Best Photos</a></li>
+                        <li><a href="{{ url_for('rating_gallery', year=year, rating_type='Average') }}">Average Photos</a></li>
+                        <li><a href="{{ url_for('rating_gallery', year=year, rating_type='Worst') }}">Worst Photos</a></li>
+                        <li><a href="{{ url_for('rating_gallery', year=year, rating_type='To Delete') }}">To Delete Photos</a></li>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('index') }}">Back to Home</a>
+    </main>
+    <footer>
+        <p>&copy; 2024 Photo Gallery</p>
+    </footer>
+</body>
+</html>

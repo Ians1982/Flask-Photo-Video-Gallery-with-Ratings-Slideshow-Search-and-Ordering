@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Ratings Overview for {{ year }}</title>
+</head>
+<body>
+    <h1>Ratings Overview for {{ year }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Gallery</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gallery, image in images %}
+            <tr>
+                <td>{{ gallery }}</td>
+                <td>
+                    <img src="{{ url_for('static', filename='images/' ~ year ~ '/' ~ gallery ~ '/' ~ image) }}" alt="{{ image }}" style="width: 100px; height: auto;">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('index') }}">Back to Index</a>
+</body>
+</html>

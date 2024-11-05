@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ gallery_name }} - {{ year }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=YourDecorativeFont:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    h1 {
+        font-family: 'YourDecorativeFont', serif;
+        text-align: center;
+        font-size: 2.5em;
+        margin: 10px 0;
+    }
+
+    .image-list {
+        display: flex;
+        justify-content: flex-start; /* Aligns items to the start */
+        flex-wrap: wrap; /* Allows wrapping */
+    }
+.table-container {
+            width: 40%; /* Set the width of the table to 40% of the screen */
+            margin: 0px; /* Center the table horizontally */
+            border-radius: 30px; /* Add curved corners to the table container */
+            overflow: hidden; /* Hide overflow to keep corners rounded */
+            border: 0px solid grey; /* Add border around the table container */
+        }
+        table {
+            width: 100%; /* Make the table fill the container */
+            border-collapse: collapse; /* Collapse borders into a single border */
+        }
+        th, td {
+            width: 20%; /* Each cell will take up 20% of the table width */
+            padding: 5px; /* Add padding to table cells */
+            text-align: center; /* Center text in cells */
+            border: 0px solid black; /* Add border to cells */
+        }
+        th {
+            background-color: #f2f2f2; /* Light gray background for header cells */
+        }
+        td {
+            background-color: #ffffff; /* White background for data cells */
+        }
+h3 {
+    margin-top: 0px; /* Remove default margin */
+    padding: 0px; /* Remove padding */
+}		
+h2 {
+        margin-bottom: 0; /* Remove the bottom margin */
+    }
+		.thumbnail {
+        width: calc(19.2% - 10px); /* Allows five thumbnails per row */
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+        text-align: center;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .thumbnail:hover {
+        transform: scale(1.05);
+        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .thumbnail img {
+        max-width: 100%;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: transform 0.5s;
+    }
+
+    .thumbnail img:hover {
+        transform: scale(1.75);
+    }
+
+    .description {
+        word-wrap: break-word; /* Forces wrapping on long words */
+        word-break: break-all; /* Breaks words when needed */
+        margin: 5px 0;
+        text-align: left;
+    }
+
+    .controls {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    button {
+        color: white;
+        padding: 3px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 0 3px;
+        background-color: #4CAF50; /* Default green color for other buttons */
+    }
+
+    button:hover {
+        background-color: #45a049; /* Darker green on hover */
+    }
+
+    .delete-button {
+        background-color: #f44336; /* Red color for delete button */
+    }
+
+    .delete-button:hover {
+        background-color: #d32f2f; /* Darker red on hover */
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        text-align: center;
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .close {
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: #bbb;
+    }
+
+    .rating {
+        margin-top: 20px;
+    }
+
+    .return-to-top {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        cursor: pointer;
+        display: none;
+        z-index: 1000;
+    }
+
+    .return-to-top:hover {
+        background-color: #45a049;
+    }
+
+    #returnToIndex {
+        position: fixed;
+        bottom: 20px;
+        left: 150px; /* Adjust to place next to Return to Top button */
+        background-color: #007bff; /* Button background color */
+        color: white; /* Text color */
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        cursor: pointer;
+        display: none; /* Initially hidden */
+        z-index: 1000; /* Ensures it's above other elements */
+    }
+
+    #returnToIndex:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    /* Additional wrapping rules for text-heavy sections */
+    p, .rating-form, input[type="text"] {
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+</style>
+
+</head>
+<body>
+    <h1>{{ gallery_name }} - {{ year }}</h1>
+    <div style="text-align: center;">
+        <a href="{{ url_for('random_gallery') }}" class="btn btn-success">Random Gallery</a>
+        &emsp;&emsp;<a href="/">Back to Photo Galleries</a>
+        &emsp;&emsp;<a href="{{ url_for('videos') }}" class="btn btn-primary">View Videos</a>
+    </div>
+	
+	<!-- Display image counts -->
+<center><h2>
+    There {{ 'is' if total_images == 1 else 'are' }} {{ total_images }} photo{{ '' if total_images == 1 else 's' }} in this gallery</h2>
+
+<div class="table-container">
+    <table>
+        <tr>
+            <th><h4>{% if count_best == 1 %}
+        {{ count_best }} is rated as Best,
+    {% elif count_best > 1 %}
+        {{ count_best }} are rated as Best,
+    {% endif %}
+	<br>
+    {% if count_good == 1 %}
+        {{ count_good }} is rated as Good,
+    {% elif count_good > 1 %}
+        {{ count_good }} are rated as Good,
+    {% endif %}
+	<br>
+    {% if count_average == 1 %}
+        {{ count_average }} is rated as Average,
+    {% elif count_average > 1 %}
+        {{ count_average }} are rated as Average,
+    {% endif %}
+    <br>
+	{% if count_unrated == 1 %}
+        {{ count_unrated }} is Unrated,
+    {% elif count_unrated > 1 %}
+        {{ count_unrated }} are Unrated,
+    {% endif %}
+    <br>
+	{% if count_worst == 1 %}
+        {{ count_worst }} is rated as Worst,
+    {% elif count_worst > 1 %}
+        {{ count_worst }} are rated as Worst,
+    {% endif %}
+<br>
+    {% if count_to_delete == 1 %}
+        {{ count_to_delete }} is marked To Delete.
+    {% elif count_to_delete > 1 %}
+        {{ count_to_delete }} are marked To Delete.
+    {% endif %}
+	{% if count_no_description == 1 %}
+        {{ count_no_description }} image has no description
+    {% elif count_no_description > 1 %}
+        {{ count_no_description }} images have no description.
+    {% endif %}
+	</th></h4>
+            <th>
+<h3> Common Words in Descriptions:</h3>
+{% for word, count in most_common_words %}
+    <span>{{ word }}: {{ count }}; </span>
+{% endfor %}</th>
+        </tr>
+        
+    </table>
+</div>  
+    
+    <div class="controls">
+        <button onclick="startSlideshow()">Start Slideshow</button>
+        <label for="slideshow-timer">Slideshow Timer (3-30 seconds):</label>
+        <input type="range" id="slideshow-timer" value="5" min="3" max="30" oninput="updateSliderValue(this.value)">
+        <span id="sliderValue">5</span> seconds
+        <button onclick="stopSlideshow()">Stop Slideshow</button>
+		
+    </div>
+ <h3>Folders:</h3>
+    <div>
+        {% for folder in folders %}
+            <a href="{{ url_for('gallery', year=year, gallery_name=folder) }}">{{ folder }}</a><br>
+        {% endfor %}
+    </div>
+<div class="image-list">
+    {% for image in images %}
+    <div class="thumbnail">
+        <img src="{{ url_for('static', filename='images/' + year + '/' + gallery_name + '/thumbnails/' + image.split('/')[-1] | replace('\\', '/')) }}" 
+             alt="{{ image }}" 
+             aria-describedby="description-{{ loop.index }}" 
+             onclick="showImage('{{ image | replace('\\', '/') }}')"> <!-- Add this onclick attribute -->
+		<p>{{ url_for('static', filename='images/' + year + '/' + gallery_name + '/' + image.split('/')[-1] | replace('%20', ' ') | replace('\\', '/')) }}</p>
+
+        <p>Rating: {{ image_data[image]['rating'] }}</p>
+        <p>Description: {{ image_data[image]['description'] }}</p>
+
+        <form method="POST" action="/rate" class="rating-form" onsubmit="updateRating(event, '{{ image }}')">
+    <input type="hidden" name="year" value="{{ year }}">
+    <input type="hidden" name="gallery_name" value="{{ gallery_name }}">
+    <input type="hidden" name="image_name" value="{{ image }}">
+    <label for="rating">Rating:</label>
+    <select name="rating">
+                <option value="Unrated" {% if image_data[image]['rating'] == 'Unrated' %}selected{% endif %}>Unrated</option>
+                <option value="Best" {% if image_data[image]['rating'] == 'Best' %}selected{% endif %}>Best</option>
+                <option value="Good" {% if image_data[image]['rating'] == 'Good' %}selected{% endif %}>Good</option>
+                <option value="Average" {% if image_data[image]['rating'] == 'Average' %}selected{% endif %}>Average</option>
+                <option value="Worst" {% if image_data[image]['rating'] == 'Worst' %}selected{% endif %}>Worst</option>
+                <option value="To Delete" {% if image_data[image]['rating'] == 'To Delete' %}selected{% endif %}>To Delete</option>
+            </select>
+    <label for="description">Description:</label>
+    <input type="text" name="description" value="{{ image_data[image]['description'] }}">
+    <button type="submit">Save</button>
+</form>
+
+
+        <form method="POST" action="/delete" onsubmit="return confirm('Are you sure you want to delete this image?');">
+            <input type="hidden" name="year" value="{{ year }}">
+            <input type="hidden" name="gallery_name" value="{{ gallery_name }}">
+            <input type="hidden" name="image_name" value="{{ image }}">
+			<button type="submit" class="delete-button">Delete</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+      <div id="myModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Modal Image" style="max-width: 100%; max-height: 95vh; height: auto;">
+            <div class="rating">
+                <form method="POST" action="/rate" id="modalRatingForm" onsubmit="return updateModalRating(event)">
+                    <input type="hidden" id="modalYear" name="year" value="{{ year }}">
+                    <input type="hidden" id="modalGallery" name="gallery_name" value="{{ gallery_name }}">
+                    <input type="hidden" id="modalImageName" name="image_name">
+                    <select name="rating" required>
+                    <option value="">Rate</option>
+                    <option value="Best">Best</option>
+                    <option value="Good">Good</option>
+                    <option value="Average">Average</option>
+                    <option value="Worst">Worst</option>
+                    <option value="To Delete">To Delete</option>
+                </select>
+                    <button type="submit">Submit</button>
+                </form>
+                <p id="ratingFeedback" style="color: red; display: none;">Error Updating Rating</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="return-to-top" onclick="scrollToTop()">Return to Top</button>
+    <button id="returnToIndex" onclick="location.href='/'">Return to Index</button>
+<div style="text-align: center; margin-top: 20px;">
+   	<!-- Display image counts -->
+<center><h3>This is the end of the {{ gallery_name }} gallery.</h3>
+<div class="table-container">
+    <table>
+        <tr>
+            <th> There {{ 'is' if total_images == 1 else 'are' }} {{ total_images }} photo{{ '' if total_images == 1 else 's' }} in this gallery
+<br>    
+    {% if count_best == 1 %}
+        {{ count_best }} is rated as Best,
+    {% elif count_best > 1 %}
+        {{ count_best }} are rated as Best,
+    {% endif %}
+<br>
+    {% if count_good == 1 %}
+        {{ count_good }} is rated as Good,
+    {% elif count_good > 1 %}
+        {{ count_good }} are rated as Good,
+    {% endif %}	
+<br>    
+    {% if count_average == 1 %}
+        {{ count_average }} is rated as Average,
+    {% elif count_average > 1 %}
+        {{ count_average }} are rated as Average,
+    {% endif %}
+<br>    
+    {% if count_unrated == 1 %}
+        {{ count_unrated }} remains Unrated,
+    {% elif count_unrated > 1 %}
+        {{ count_unrated }} remain Unrated,
+    {% endif %}
+    
+    {% if count_worst == 1 %}
+        {{ count_worst }} is rated as Worst,
+    {% elif count_worst > 1 %}
+        {{ count_worst }} are rated as Worst,
+    {% endif %}
+    
+    {% if count_to_delete == 1 %}
+        {{ count_to_delete }} is marked To Delete.
+    {% elif count_to_delete > 1 %}
+        {{ count_to_delete }} are marked To Delete.
+    {% endif %}
+<br>	
+	{{ count_no_description }} image{{ count_no_description != 1 and 's' or '' }} have no description
+</center>
+            <th>
+<h3> Common Words in Descriptions:</h3>
+{% for word, count in most_common_words %}
+    <span>{{ word }}: {{ count }}; </span>
+{% endfor %}</th>
+        </tr>
+        
+    </table>
+</center>
+</div>
+    <script>
+        let slideshowInterval;
+        let currentImageIndex = 0;
+        let images = {{ images | tojson }};
+
+        function showImage(image) {
+            const modal = document.getElementById("myModal");
+            const modalImage = document.getElementById("modalImage");
+            const imagePath = "{{ url_for('static', filename='images/' ~ (('/' ~ subdirectory) if subdirectory else '') ~ '/')}}/" + image.replace(/\\/g, "/");
+            
+            modalImage.src = imagePath;
+            modal.style.display = "flex";
+            currentImageIndex = images.indexOf(image);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+            if (currentImageIndex >= images.length) currentImageIndex = 0;
+
+            showImage(images[currentImageIndex]);
+        }
+
+        function startSlideshow() {
+            const timerValue = document.getElementById("slideshow-timer").value;
+            slideshowInterval = setInterval(() => {
+                changeImage(1);
+            }, timerValue * 1000);
+        }
+
+        function stopSlideshow() {
+            clearInterval(slideshowInterval);
+        }
+
+        function updateSliderValue(value) {
+            document.getElementById("sliderValue").innerText = value;
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateRating(event, image) {
+    event.preventDefault(); // Prevent the default form submission
+    const formData = new FormData(event.target); // Get the form data
+
+    fetch(event.target.action, {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Optionally update the UI with the new rating and description
+            alert("Rating and description updated successfully!");
+        } else {
+            alert(`Error updating rating: ${data.error || 'Unknown error.'}`);
+        }
+    })
+    .catch(() => {
+        alert("Error updating rating!");
+    });
+}
+        
+function updateModalRating(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(document.getElementById("modalRatingForm"));
+
+    fetch('/rate', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            // Log response status and text for debugging
+            return response.text().then(text => {
+                console.error('Response error:', text);
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Assuming the server responds with success message
+        alert('Rating updated successfully!');
+        closeModal(); // Close the modal after successful submission
+    })
+    .catch(error => {
+        document.getElementById("ratingFeedback").style.display = 'block'; // Show error message
+        document.getElementById("ratingFeedback").innerText = error.message; // Display the error message
+        console.error('Error:', error);
+    });
+}
+
+        // Listen for keydown events for navigation
+        window.addEventListener('keydown', function(event) {
+        const modal = document.getElementById("myModal");
+        if (modal.style.display === "flex") {
+            if (event.key === "Escape") closeModal();
+            else if (event.key === "ArrowRight") changeImage(1);
+            else if (event.key === "ArrowLeft") changeImage(-1);
+            else if ("123456".includes(event.key)) {
+                document.querySelector(`#modalRatingForm select option:nth-child(${event.key})`).selected = true;
+                document.getElementById("modalRatingForm").dispatchEvent(new Event("submit"));
+            }
+        }
+    });
+
+        // Show the "Return to Top" and "Return to Index" buttons when scrolling down
+        window.onscroll = function() {
+            const returnToTop = document.querySelector(".return-to-top");
+            const returnToIndex = document.getElementById("returnToIndex");
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                returnToTop.style.display = "block";
+                returnToIndex.style.display = "block"; // Show return to index button
+            } else {
+                returnToTop.style.display = "none";
+                returnToIndex.style.display = "none"; // Hide return to index button
+            }
+        };
+    </script>
+
+</body>
+</html>
